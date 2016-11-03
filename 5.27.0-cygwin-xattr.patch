@@ -1,0 +1,76 @@
+--- origsrc/kfilemetadata-5.27.0/src/extractors/plaintextextractor.cpp	2016-10-02 04:50:26.000000000 -0500
++++ src/kfilemetadata-5.27.0/src/extractors/plaintextextractor.cpp	2016-11-01 19:10:18.726850600 -0500
+@@ -26,7 +26,7 @@
+ 
+ #include <fstream>
+ 
+-#if defined(Q_OS_LINUX) || defined(__GLIBC__)
++#if defined(Q_OS_LINUX) || defined(__GLIBC__) || defined(Q_OS_CYGWIN)
+     #include <sys/types.h>
+     #include <sys/stat.h>
+     #include <fcntl.h>
+@@ -48,7 +48,7 @@ QStringList PlainTextExtractor::mimetype
+ 
+ void PlainTextExtractor::extract(ExtractionResult* result)
+ {
+-#if defined(Q_OS_LINUX) || defined(__GLIBC__)
++#if defined(Q_OS_LINUX) || defined(__GLIBC__) || defined(Q_OS_CYGWIN)
+     QByteArray filePath = QFile::encodeName(result->inputUrl());
+ 
+ #ifdef O_NOATIME
+--- origsrc/kfilemetadata-5.27.0/src/xattr_p.h	2016-10-02 04:50:26.000000000 -0500
++++ src/kfilemetadata-5.27.0/src/xattr_p.h	2016-11-01 19:09:45.290452900 -0500
+@@ -28,7 +28,7 @@
+ #include <QFileInfo>
+ #include <QDir>
+ 
+-#if defined(Q_OS_LINUX) || defined(__GLIBC__)
++#if defined(Q_OS_LINUX) || defined(__GLIBC__) || defined(Q_OS_CYGWIN)
+ #include <sys/types.h>
+ #include <sys/xattr.h>
+ #include <attr/xattr.h>
+@@ -55,7 +55,7 @@ inline ssize_t k_getxattr(const QString&
+     const char* attributeName = n.constData();
+ 
+     // First get the size of the data we are going to get to reserve the right amount of space.
+-#if defined(Q_OS_LINUX) || (defined(__GLIBC__) && !defined(__stub_getxattr))
++#if defined(Q_OS_LINUX) || (defined(__GLIBC__) && !defined(__stub_getxattr)) || defined(Q_OS_CYGWIN)
+     const ssize_t size = getxattr(encodedPath, attributeName, NULL, 0);
+ #elif defined(Q_OS_MAC)
+     const ssize_t size = getxattr(encodedPath, attributeName, NULL, 0, 0, 0);
+@@ -84,7 +84,7 @@ inline ssize_t k_getxattr(const QString&
+ 
+     QByteArray data(size, Qt::Uninitialized);
+ 
+-#if defined(Q_OS_LINUX) || (defined(__GLIBC__) && !defined(__stub_getxattr))
++#if defined(Q_OS_LINUX) || (defined(__GLIBC__) && !defined(__stub_getxattr)) || defined(Q_OS_CYGWIN)
+     const ssize_t r = getxattr(encodedPath, attributeName, data.data(), size);
+ #elif defined(Q_OS_MAC)
+     const ssize_t r = getxattr(encodedPath, attributeName, data.data(), size, 0, 0);
+@@ -116,7 +116,7 @@ inline int k_setxattr(const QString& pat
+ 
+     const size_t valueSize = v.size();
+ 
+-#if defined(Q_OS_LINUX) || (defined(__GLIBC__) && !defined(__stub_setxattr))
++#if defined(Q_OS_LINUX) || (defined(__GLIBC__) && !defined(__stub_setxattr)) || defined(Q_OS_CYGWIN)
+     return setxattr(encodedPath, attributeName, attributeValue, valueSize, 0);
+ #elif defined(Q_OS_MAC)
+     return setxattr(encodedPath, attributeName, attributeValue, valueSize, 0, 0);
+@@ -163,7 +163,7 @@ inline int k_removexattr(const QString&
+     const QByteArray n = name.toUtf8();
+     const char* attributeName = n.constData();
+ 
+-    #if defined(Q_OS_LINUX) || (defined(__GLIBC__) && !defined(__stub_removexattr))
++    #if defined(Q_OS_LINUX) || (defined(__GLIBC__) && !defined(__stub_removexattr)) || defined(Q_OS_CYGWIN)
+         return removexattr(encodedPath, attributeName);
+     #elif defined(Q_OS_MAC)
+         return removexattr(encodedPath, attributeName, XATTR_NOFOLLOW );
+@@ -219,7 +219,7 @@ inline bool k_hasAttribute(const QString
+ inline bool k_isSupported(const QString& path)
+ {
+     QString value;
+-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC) || defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD)
++#if defined(Q_OS_LINUX) || defined(Q_OS_MAC) || defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_CYGWIN)
+     k_getxattr(path, QStringLiteral("user.test"), &value);
+     return (errno != ENOTSUP);
+ #elif defined(Q_OS_WIN)

@@ -1,0 +1,27 @@
+inherit kf5
+
+NAME="kf5-kfilemetadata"
+VERSION=5.27.0
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="KDE 5 file metadata and text extraction library"
+DESCRIPTION="KFileMetaData provides a simple library for extracting the text
+and metadata from a number of different files. This library is typically used
+by file indexers to retreive the metadata. This library can also be used by
+applications to write metadata."
+
+PATCH_URI="5.27.0-cygwin-xattr.patch"
+
+PKG_NAMES="libKF5FileMetaData3 libKF5FileMetaData-devel"
+libKF5FileMetaData3_CONTENTS="
+	usr/bin/cygKF5FileMetaData-3.dll
+	usr/lib/qt5/plugins/kf5/kfilemetadata/
+	usr/share/doc/
+	usr/share/locale/
+"
+libKF5FileMetaData_devel_REQUIRES="libKF5I18n-devel libQt5Core-devel"
+libKF5FileMetaData_devel_CONTENTS="
+	usr/include/KF5/KFileMetaData/
+	usr/lib/cmake/KF5FileMetaData/
+	usr/lib/libKF5FileMetaData.dll.a
+"
