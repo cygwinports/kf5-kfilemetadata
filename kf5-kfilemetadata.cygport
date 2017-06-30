@@ -1,7 +1,7 @@
 inherit kf5
 
 NAME="kf5-kfilemetadata"
-VERSION=5.27.0
+VERSION=5.35.0
 RELEASE=1
 CATEGORY="Libs"
 SUMMARY="KDE 5 file metadata and text extraction library"
@@ -25,3 +25,5 @@ libKF5FileMetaData_devel_CONTENTS="
 	usr/lib/cmake/KF5FileMetaData/
 	usr/lib/libKF5FileMetaData.dll.a
 "
+
+CYGCMAKE_ARGS="-DAVUTIL_LIBRARIES=NOTFOUND"
