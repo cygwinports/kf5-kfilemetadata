@@ -1,7 +1,7 @@
 inherit kf5
 
 NAME="kf5-kfilemetadata"
-VERSION=5.39.0
+VERSION=5.43.0
 RELEASE=1
 CATEGORY="Libs"
 SUMMARY="KDE 5 file metadata and text extraction library"
@@ -14,6 +14,7 @@ PATCH_URI="5.27.0-cygwin-xattr.patch"
 
 PKG_NAMES="libKF5FileMetaData3 libKF5FileMetaData-devel"
 libKF5FileMetaData3_CONTENTS="
+	etc/xdg/kfilemetadata.categories
 	usr/bin/cygKF5FileMetaData-3.dll
 	usr/lib/qt5/plugins/kf5/kfilemetadata/
 	usr/share/doc/
